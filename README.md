@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-green.svg)](https://www.python.org/)
 
-> A sleek, interactive command-line application to manage your personal movie collection with persistent JSON storage, fuzzy search, filtering, and advanced statistics. Perfect for showcasing your Python skills to recruiters! 🚀
+> A sleek, interactive command-line application to manage your personal movie collection with persistent JSON storage, fuzzy search, filtering, and advanced statistics. 🚀
 
 ---
 
@@ -112,10 +112,6 @@ Upon running, you'll see a colorful menu. Simply enter the number corresponding 
 - **Histogram styling**: Adjust bins/size in `create_rating_histogram()`.
 
 ---
-
-## 🔄 Demo GIF
-
-![Demo GIF](docs/demo.gif)
 
 
 ## 🧑‍💻 Contributing

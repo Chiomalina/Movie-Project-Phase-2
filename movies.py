@@ -78,8 +78,8 @@ def list_movies():
     """List all movies with their year and rating."""
     movies = movie_storage.get_movies()
     print(Fore.CYAN + f"\n{len(movies)} movies in total")
-    for t, info in movies.items():
-        print(Fore.GREEN + f"{t} ({info['year']}): {info['rating']}")
+    for mov_title, info in movies.items():
+        print(Fore.GREEN + f"{mov_title} ({info['year']}): {info['rating']}")
     input(Fore.MAGENTA + "\nPress enter to continue")
 
 
@@ -141,9 +141,9 @@ def random_movie():
     """Pick and display a random movie."""
     movies = movie_storage.get_movies()
     if movies:
-        t = random.choice(list(movies))
-        info = movies[t]
-        print(Fore.GREEN + f"Your movie for tonight: {t} ({info['year']}) — {info['rating']}")
+        movie_title = random.choice(list(movies))
+        info = movies[movie_title]
+        print(Fore.GREEN + f"Your movie for tonight: {movie_title} ({info['year']}) — {info['rating']}")
     input(Fore.MAGENTA + "\nPress enter to continue")
 
 
@@ -156,7 +156,7 @@ def search_movie():
         print(Fore.GREEN + f"Found: {term} ({info['year']}) — {info['rating']}")
     else:
         matches = process.extract(term, movies.keys(), scorer=fuzz.ratio, limit=5)
-        suggestions = [m for m, score in matches if score >= 50]
+        suggestions = [match for match, score, _ in matches  if score >= 50]
         if suggestions:
             print(Fore.YELLOW + "\nNo exact match. Did you mean:")
             for m in suggestions:
@@ -199,12 +199,12 @@ def filter_movies():
     movies = movie_storage.get_movies()
     # Prompt for criteria
     while True:
-        s = input(Fore.MAGENTA + "Enter minimum rating (leave blank for no minimum): ").strip()
-        if not s:
+        input_rating = input(Fore.MAGENTA + "Enter minimum rating (leave blank for no minimum): ").strip()
+        if not input_rating:
             min_rating = None
             break
         try:
-            val = float(s)
+            val = float(input_rating)
             if 0.0 <= val <= 10.0:
                 min_rating = val
                 break
@@ -212,39 +212,39 @@ def filter_movies():
         except ValueError:
             print(Fore.RED + "⚠️ Invalid rating format.")
     while True:
-        s = input(Fore.MAGENTA + "Enter start year (leave blank for no start year): ").strip()
-        if not s:
+        input_start_year = input(Fore.MAGENTA + "Enter start year (leave blank for no start year): ").strip()
+        if not input_start_year:
             start_year = None
             break
-        if s.isdigit() and len(s) == 4:
-            start_year = int(s)
+        if input_start_year.isdigit() and len(input_start_year) == 4:
+            start_year = int(input_start_year)
             break
         print(Fore.RED + "⚠️ Year must be a four-digit number.")
     while True:
-        s = input(Fore.MAGENTA + "Enter end year (leave blank for no end year): ").strip()
-        if not s:
+        input_end_year = input(Fore.MAGENTA + "Enter end year (leave blank for no end year): ").strip()
+        if not input_end_year:
             end_year = None
             break
-        if s.isdigit() and len(s) == 4:
-            end_year = int(s)
+        if input_end_year.isdigit() and len(input_end_year) == 4:
+            end_year = int(input_end_year)
             break
         print(Fore.RED + "⚠️ Year must be a four-digit number.")
     # Filter logic
     filtered = []
-    for t, info in movies.items():
-        r, y = info['rating'], info['year']
-        if min_rating is not None and r < min_rating:
+    for movie_title, info in movies.items():
+        movie_rating, movie_year = info['rating'], info['year']
+        if min_rating is not None and movie_rating < min_rating:
             continue
-        if start_year is not None and y < start_year:
+        if start_year is not None and movie_year < start_year:
             continue
-        if end_year is not None and y > end_year:
+        if end_year is not None and movie_year > end_year:
             continue
-        filtered.append((t, y, r))
+        filtered.append((movie_title, movie_year, movie_rating))
     # Display results
     print(Fore.CYAN + "\nFiltered Movies:")
     if filtered:
-        for t, y, r in filtered:
-            print(Fore.GREEN + f"{t} ({y}): {r}")
+        for movie_title, movie_year, movie_rating in filtered:
+            print(Fore.GREEN + f"{movie_title} ({movie_year}): {movie_rating}")
     else:
         print(Fore.YELLOW + "No movies match the criteria.")
     input(Fore.MAGENTA + "\nPress enter to continue")
