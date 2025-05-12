@@ -1,3 +1,5 @@
+# Before Bonus oprion: Filter Movies
+
 import random
 import matplotlib.pyplot as plt
 from colorama import Fore, init
@@ -40,14 +42,14 @@ def prompt_year():
 
 
 def prompt_choice():
-    """Prompt until the user selects a valid menu choice (0-11)."""
+    """Prompt until the user selects a valid menu choice (0-10)."""
     while True:
-        s = input(Fore.MAGENTA + "Enter choice (0-11): ").strip()
+        s = input(Fore.MAGENTA + "Enter choice (0-10): ").strip()
         try:
             c = int(s)
-            if 0 <= c <= 11:
+            if 0 <= c <= 10:
                 return c
-            print(Fore.RED + "⚠️ Choice must be between 0 and 11.")
+            print(Fore.RED + "⚠️ Choice must be between 0 and 10.")
         except ValueError:
             print(Fore.RED + "⚠️ Invalid input; please enter a number.")
 
@@ -70,8 +72,7 @@ def display_menu():
     print(Fore.YELLOW + "7. Search movies")
     print(Fore.YELLOW + "8. Movies sorted by rating")
     print(Fore.YELLOW + "9. Create Rating Histogram")
-    print(Fore.YELLOW + "10. Movies sorted by year")
-    print(Fore.YELLOW + "11. Filter movies\n")
+    print(Fore.YELLOW + "10. Movies sorted by year\n")
 
 
 def list_movies():
@@ -149,7 +150,7 @@ def random_movie():
 
 def search_movie():
     """Search for movies by fuzzy matching; prompts until non-empty term."""
-    term = prompt_title("Enter part of movie name to search: ")
+    term = prompt_title("Enter part of movie name: ")
     movies = movie_storage.get_movies()
     if term in movies:
         info = movies[term]
@@ -180,73 +181,18 @@ def sort_movies_by_rating():
 def sort_movies_by_year():
     """Show movies sorted by release year, asking latest-first or oldest-first."""
     movies = movie_storage.get_movies()
+    # Ask user for order
     while True:
         ans = input(Fore.MAGENTA + "Show latest movies first? (y/n): ").strip().lower()
         if ans in ('y', 'n'):
             break
         print(Fore.RED + "⚠️ Please enter 'y' or 'n'.")
-    reverse = ans == 'y'
+    reverse = True if ans == 'y' else False
     sorted_list = sorted(movies.items(), key=lambda x: x[1]['year'], reverse=reverse)
     order_desc = "latest first" if reverse else "oldest first"
     print(Fore.CYAN + f"\nMovies sorted by year ({order_desc}):")
     for t, info in sorted_list:
         print(Fore.GREEN + f"{t} ({info['year']}) — {info['rating']}")
-    input(Fore.MAGENTA + "\nPress enter to continue")
-
-
-def filter_movies():
-    """Filter movies by minimum rating, start year and end year."""
-    movies = movie_storage.get_movies()
-    # Prompt for criteria
-    while True:
-        s = input(Fore.MAGENTA + "Enter minimum rating (leave blank for no minimum): ").strip()
-        if not s:
-            min_rating = None
-            break
-        try:
-            val = float(s)
-            if 0.0 <= val <= 10.0:
-                min_rating = val
-                break
-            print(Fore.RED + "⚠️ Rating must be between 0.0 and 10.0.")
-        except ValueError:
-            print(Fore.RED + "⚠️ Invalid rating format.")
-    while True:
-        s = input(Fore.MAGENTA + "Enter start year (leave blank for no start year): ").strip()
-        if not s:
-            start_year = None
-            break
-        if s.isdigit() and len(s) == 4:
-            start_year = int(s)
-            break
-        print(Fore.RED + "⚠️ Year must be a four-digit number.")
-    while True:
-        s = input(Fore.MAGENTA + "Enter end year (leave blank for no end year): ").strip()
-        if not s:
-            end_year = None
-            break
-        if s.isdigit() and len(s) == 4:
-            end_year = int(s)
-            break
-        print(Fore.RED + "⚠️ Year must be a four-digit number.")
-    # Filter logic
-    filtered = []
-    for t, info in movies.items():
-        r, y = info['rating'], info['year']
-        if min_rating is not None and r < min_rating:
-            continue
-        if start_year is not None and y < start_year:
-            continue
-        if end_year is not None and y > end_year:
-            continue
-        filtered.append((t, y, r))
-    # Display results
-    print(Fore.CYAN + "\nFiltered Movies:")
-    if filtered:
-        for t, y, r in filtered:
-            print(Fore.GREEN + f"{t} ({y}): {r}")
-    else:
-        print(Fore.YELLOW + "No movies match the criteria.")
     input(Fore.MAGENTA + "\nPress enter to continue")
 
 
@@ -295,8 +241,6 @@ def main():
             create_rating_histogram()
         elif choice == 10:
             sort_movies_by_year()
-        elif choice == 11:
-            filter_movies()
 
 
 if __name__ == "__main__":
