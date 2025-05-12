@@ -130,8 +130,8 @@ def stats():
         median = sorted(ratings)[len(ratings)//2]
         best = max(movies, key=lambda t: movies[t]['rating'])
         worst = min(movies, key=lambda t: movies[t]['rating'])
-        print(Fore.CYAN + f"\nAverage Rating: {avg:.2f}")
-        print(Fore.CYAN + f"Median Rating : {median:.2f}")
+        print(Fore.CYAN + f"\nAverage Rating: {avg:.1f}")
+        print(Fore.CYAN + f"Median Rating : {median:.1f}")
         print(Fore.GREEN + f"Best Movie    : {best} ({movies[best]['year']}) — {movies[best]['rating']}")
         print(Fore.RED + f"Worst Movie   : {worst} ({movies[worst]['year']}) — {movies[worst]['rating']}")
     input(Fore.MAGENTA + "\nPress enter to continue")
